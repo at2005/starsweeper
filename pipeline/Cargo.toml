@@ -1,0 +1,12 @@
+[package]
+name = "pipeline"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.91"
+futures-util = "0.3.31"
+indicatif = "0.17.8"
+reqwest = { version = "0.11.18", features = ["stream"] }
+scraper = "0.20.0"
+tokio = { version = "1.28.2", features = ["full"] }
