@@ -96,11 +96,16 @@ impl OrbitalElements {
                     {r20} * x + {r21} * y + {r22} * z as z_p
                 FROM coords
             )
-            SELECT TOP 30 *
-            FROM projected
-            WHERE ABS(z_p) < 10 
-            "#
+            SELECT p1.*
+            FROM projected AS p1
+            INNER JOIN (
+                SELECT DISTINCT p2.source_id
+                FROM projected AS p2
+                WHERE ABS(p2.z_p) < 10
+            ) AS filtered_ids ON p1.source_id = filtered_ids.source_id
+        "#
         );
+
         conversion_query
     }
 }

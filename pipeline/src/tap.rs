@@ -115,11 +115,22 @@ impl TapClient {
                 .and_then(|n| n.text())
                 .unwrap();
 
-            if phase == "COMPLETED" {
-                break;
-            }
+            match phase {
+                "COMPLETED" => {
+                    println!(
+                        "Query {} finished executing server-side. Downloading results.",
+                        job_id
+                    );
+                    break;
+                }
 
-            tokio::time::sleep(std::time::Duration::from_millis(200)).await;
+                "ERROR" => {
+                    panic!("Query {} failed to execute server-side. Panicking.", job_id);
+                }
+                _ => {
+                    tokio::time::sleep(std::time::Duration::from_millis(200)).await;
+                }
+            }
         }
 
         let tables_path_clone = tables_path.to_string();
@@ -174,7 +185,7 @@ impl DownloadManager {
         std::fs::create_dir_all("data")?;
         let possible_orbits = get_possible_orbits();
         let mut handles = vec![];
-        let num_jobs = 5;
+        let num_jobs = 1;
         for i in 0..num_jobs {
             let query = possible_orbits[i].get_query();
             let tap_client = self.tap_client.clone();
