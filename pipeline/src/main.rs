@@ -1,3 +1,4 @@
+mod query;
 mod tap;
 use anyhow::Result;
 use tap::DownloadManager;

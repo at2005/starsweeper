@@ -1,3 +1,4 @@
+use crate::query::get_possible_orbits;
 use anyhow::Result;
 use futures_util::{future::join_all, StreamExt};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
@@ -171,17 +172,18 @@ impl DownloadManager {
         let style = ProgressStyle::default_bar()
         .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")?;
         std::fs::create_dir_all("data")?;
-        let query = "SELECT DISTANCE(POINT(266.41683,-29.00781),POINT(ra,dec)) AS dist, * FROM gaiadr1.gaia_source  WHERE DISTANCE(POINT(266.41683,-29.00781),POINT(ra,dec)) < 0.08333333 ORDER BY dist ASC";
-
+        let possible_orbits = get_possible_orbits();
         let mut handles = vec![];
-        let num_jobs = 50;
-        for _i in 0..num_jobs {
+        let num_jobs = 5;
+        for i in 0..num_jobs {
+            let query = possible_orbits[i].get_query();
             let tap_client = self.tap_client.clone();
             let progress_bar = self.multi_progress.add(ProgressBar::new(0));
             progress_bar.set_style(style.clone());
+            println!("Starting job {}", i + 1);
             let handle = tokio::spawn(async move {
                 tap_client
-                    .start_download_job(progress_bar, query.to_string())
+                    .start_download_job(progress_bar, query)
                     .await
                     .unwrap();
             });
