@@ -187,7 +187,7 @@ impl DownloadManager {
         let mut handles = vec![];
         let num_jobs = 1;
         for i in 0..num_jobs {
-            let query = possible_orbits[i].get_query();
+            let query = possible_orbits[i].get_gaia_query();
             let tap_client = self.tap_client.clone();
             let progress_bar = self.multi_progress.add(ProgressBar::new(0));
             progress_bar.set_style(style.clone());

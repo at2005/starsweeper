@@ -65,14 +65,26 @@ impl OrbitalElements {
         );
         rotation_matrix
     }
-    pub fn get_query(&self) -> String {
+
+    // pub fn get_panstarrs_query(&self) -> String {
+    //     let rotation_matrix = self.to_rotation_matrix();
+    //     let r20= rotation_matrix[2][0];
+    //     let r21= rotation_matrix[2][1];
+    //     let r22= rotation_matrix[2][2];
+
+
+
+    //     "".to_string()
+    // }
+
+    pub fn get_subaru_query(&self) -> String {
         let rotation_matrix = self.to_rotation_matrix();
-        let r00 = rotation_matrix[0][0];
-        let r01 = rotation_matrix[0][1];
-        let r02 = rotation_matrix[0][2];
-        let r10 = rotation_matrix[1][0];
-        let r11 = rotation_matrix[1][1];
-        let r12 = rotation_matrix[1][2];
+        
+        "".to_string()
+    }
+
+    pub fn get_gaia_query(&self) -> String {
+        let rotation_matrix = self.to_rotation_matrix();
         let r20 = rotation_matrix[2][0];
         let r21 = rotation_matrix[2][1];
         let r22 = rotation_matrix[2][2];
@@ -91,8 +103,6 @@ impl OrbitalElements {
             projected AS (
                 SELECT 
                     coords.*,
-                    {r00} * x + {r01} * y + {r02} * z as x_p,
-                    {r10} * x + {r11} * y + {r12} * z as y_p,
                     {r20} * x + {r21} * y + {r22} * z as z_p
                 FROM coords
             )
