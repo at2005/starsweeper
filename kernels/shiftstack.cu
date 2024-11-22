@@ -1,4 +1,6 @@
 
+// this is kinda half baked rn, gonna test it out in python for sedna first
+
 #define MAX_HEIGHT 240
 #define MAX_WIDTH 240
 #define RA_CENTER_IDX 120
@@ -90,5 +92,5 @@ int main() {
     OrbitalElements* device_elements;
     cudaMalloc(&device_elements, sizeof(OrbitalElements));
     cudaMemcpy(device_elements, &elements, sizeof(OrbitalElements), cudaMemcpyHostToDevice);
-
+    
 }
